@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
+ * @method findOneByUserName(string $userName): ?User
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository
@@ -45,7 +46,7 @@ class UserRepository extends ServiceEntityRepository
     {
         $user = new User();
 
-        $userName = $userSchema->getName() . rand(1000, 9999);
+        $userName = $this->generateUniqueUsername($userSchema->getName());
 
         $password = $this->passwordHasher->hashPassword($user, $userSchema->getPassword());
 
@@ -57,9 +58,17 @@ class UserRepository extends ServiceEntityRepository
             ->setLoginType(LoginTypeEnum::EMAIL);
 
         $this->getEntityManager()->persist($user);
-
         $this->getEntityManager()->flush();
 
         return $user;
+    }
+
+    private function generateUniqueUsername(string $name): string
+    {
+        do {
+            $userName = $name . rand(1000, 9999);
+        } while ($this->findOneByUserName($userName));
+
+        return $userName;
     }
 }
