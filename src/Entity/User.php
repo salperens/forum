@@ -34,6 +34,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(enumType: LoginTypeEnum::class)]
     private ?LoginTypeEnum $loginType = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserProfile $userProfile = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,5 +126,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->userProfile;
+    }
+
+    public function setUserProfile(UserProfile $userProfile): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userProfile->getUser() !== $this) {
+            $userProfile->setUser($this);
+        }
+
+        $this->userProfile = $userProfile;
+
+        return $this;
     }
 }
