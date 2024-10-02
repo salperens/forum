@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Auth;
+namespace App\Controller\API\Auth;
 
 use App\Request\Auth\RegistrationRequest;
 use App\Response\Auth\RegistrationSuccessfulResponse;
