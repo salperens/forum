@@ -7,10 +7,12 @@ namespace App\Manager;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Schema\UserSchema;
+use App\Trait\JWTTokenTrait;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 final class RegisterManager
 {
+    use JWTTokenTrait;
     private UserSchema $registeredUser;
     
     private User $user;
@@ -45,7 +47,7 @@ final class RegisterManager
 
     public function createAuthToken(): self
     {
-        $this->token = $this->JWTManager->create($this->user);
+        $this->token = $this->createTokenForUser($this->user);
 
         return $this;
     }
