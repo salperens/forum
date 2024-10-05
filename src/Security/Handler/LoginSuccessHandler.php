@@ -16,9 +16,15 @@ final class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
     use JWTTokenTrait;
 
     /**
-     * @inheritDoc
+     * Handles successful authentication by generating a JWT token for the authenticated user.
+     *
+     * @param Request $request The request that resulted in an AuthenticationException
+     * @param TokenInterface $token The token that was created during authentication
+     *
+     * @return JsonResponse A response which includes the JWT token
+     *
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?JsonResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): JsonResponse
     {
         /** @var User $user */
         $user = $token->getUser();
